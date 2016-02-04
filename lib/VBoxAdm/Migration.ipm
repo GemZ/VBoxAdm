@@ -284,18 +284,15 @@ sub migrate {
         #
         # Iterate over all domains, we need the domain_id
         #
-        my $query       = 'SELECT domain_id,domain,enabled FROM `' . $source_db . '`.domains';
-        my $sth_domains = $self->dbh()->prepare($query);
-        $query = "SELECT alias FROM vexim.domainalias WHERE domain_id = ?";
-        my $sth_domainalias = $self->dbh()->prepare($query);
-        $query =
-'SELECT localpart,clear,smtp,pop,type,admin,on_vacation,enabled,forward,maxmsgsize,quota,realname,vacation,on_spamassassin,sa_refuse,crypt,on_forward FROM `'
-          . $source_db
-          . '`.users WHERE domain_id = ?';
-        my $sth_users = $self->dbh()->prepare($query);
+        my $sql_domains = 'SELECT domain_id,domain,enabled FROM `' . $source_db . '`.domains';
+        my $sth_domains = $self->dbh()->prepare($sql_domains);
+        my $sql_domainalias = 'SELECT alias FROM `' . $source_db . '`.domainalias WHERE domain_id = ?';
+        my $sth_domainalias = $self->dbh()->prepare($sql_domainalias);
+        my $sql_users = 'SELECT localpart,clear,smtp,pop,type,admin,on_vacation,enabled,forward,maxmsgsize,quota,realname,vacation,on_spamassassin,sa_refuse,crypt,on_forward FROM `' . $source_db . '`.users WHERE domain_id = ?';
+        my $sth_users = $self->dbh()->prepare($sql_users);
 
         $sth_domains->execute()
-          or die( "Could not execute query $query: " . $sth_domains->errstr );
+          or die( "Could not execute query $sql_domains: " . $sth_domains->errstr );
         while ( my ( $old_domain_id, $domain, $is_active ) = $sth_domains->fetchrow_array() ) {
 
             #
