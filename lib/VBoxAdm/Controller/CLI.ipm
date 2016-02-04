@@ -390,12 +390,13 @@ sub _read_options {
 
     GetOptions(
         'verbose|v+'    => \$self->opts()->{Verbose},
-        'dry|d!'        => \$self->opts()->{Dry},
+        'dry!'          => \$self->opts()->{Dry},
         'quiet|q!'      => \$self->opts()->{Quiet},
         'force|f!'      => \$self->opts()->{Force},
         'name|n=s'      => \$self->opts()->{Name},
         'source|s=s'    => \$self->opts()->{Source},
-        'source-db|d=s' => \$self->opts()->{SourceDb},
+        'source-db=s'   => \$self->opts()->{SourceDb},
+        'target-db=s'   => \$self->opts()->{TargetDb},
         'truncate!'     => \$self->opts()->{Truncate},
         'bootstrap!'    => \$self->opts()->{Bootstrap},
         '<>'            => sub { my $m = shift; push( @{ $self->modes() }, lc($m) ); },
@@ -900,7 +901,7 @@ sub migrate {
         $self->opts()->{'SourceDb'} = $self->config()->{'Source'};
     }
 
-    if ( $self->migration()->migrate( $self->opts()->{'Source'}, $self->opts()->{'SourceDb'}, 'vboxadm', $self->opts() ) ) {
+    if ( $self->migration()->migrate( $self->opts()->{'Source'}, $self->opts()->{'SourceDb'}, $self->opts()->{'TargetDb'}, $self->opts() ) ) {
 
         #print "Migration OK\n" unless $config->{'Quiet'};
         return 1;
