@@ -509,12 +509,13 @@ Available subcommands:
 
 Options:
 -v - Verbose
--d - Dry
+--dry - Dry
 -q - Quiet
 -f - Force
 -n - Name
--s - Source-DB
--d - Destination-DB
+--source    - Source Type
+--source-db - Source-DB
+--target-db - Destination-DB
 --truncate - Truncate Destination before migration
 --config - Location of config file
 -a - Is active?
